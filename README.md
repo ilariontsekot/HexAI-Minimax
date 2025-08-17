@@ -82,9 +82,9 @@ El agente selecciona movimientos priorizando:
 ## 7. Complejidad y Eficiencia  
 - **MiniMax sin poda**:  
 
-\[
-O(b^d) \quad \text{con } b=\text{factor de ramificación}, \; d=\text{profundidad}
-\]
+$$
+O(b^d), \quad \text{con } b = \text{factor de ramificación}, \; d = \text{profundidad}
+$$
 
 - **Con Alpha-Beta**:  
 

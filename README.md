@@ -35,6 +35,7 @@ def minimax(node, depth, alpha, beta, maximizing):
         return value
 ```
 
+<p align="center"> <img src="funcionamiento.png" alt="Funcionamiento del motor" width="500"/> </p>
 ---
 
 ## 3. Búsqueda con Profundización Iterativa (IDS)  
@@ -60,9 +61,10 @@ La evaluación del tablero combina dos ideas principales:
 
 Función heurística aproximada:  
 
-\[
+$$
 h(s) = d_{oponente}(s) - d_{jugador}(s)
-\]
+$$
+
 
 - Un valor **negativo** indica ventaja para el jugador.  
 - Un valor **positivo** indica ventaja rival.  
@@ -88,9 +90,9 @@ $$
 
 - **Con Alpha-Beta**:  
 
-\[
+$$
 O(b^{d/2})
-\]
+$$
 
 - **Con tablas de transposición**: se reducen aún más los cálculos redundantes, mejorando la eficiencia global.  
 

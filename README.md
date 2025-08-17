@@ -1,29 +1,96 @@
-# HexorcistaID: Análisis Técnico del AI Player para Hex  
+# HexorcistaID: AI Player para Hex con Minimax y Poda Alpha-Beta  
 
-## MiniMax  
-El núcleo del jugador **HexorcistaID** se basa en **MiniMax**, un algoritmo de búsqueda adversaria que evalúa todos los posibles movimientos hasta una profundidad determinada, asumiendo que el oponente juega de manera óptima. Cada nodo del árbol de juego representa un estado del tablero, y la función de evaluación heurística estima la utilidad del nodo para el jugador actual. El algoritmo selecciona la jugada que **maximiza la ganancia mínima esperada** (maximiza la seguridad ante el mejor contraataque del rival).  
+## 1. Fundamentos: MiniMax  
+El núcleo de **HexorcistaID** es el algoritmo **MiniMax**, que modela el juego como un árbol de decisiones adversarias.  
+Cada nodo representa un estado del tablero, y el agente selecciona el movimiento que maximiza su ventaja asumiendo que el rival juega de forma óptima.  
 
-## Alpha-Beta Pruning  
-Para optimizar MiniMax, se implementa **poda Alpha-Beta**, que evita evaluar ramas del árbol que no pueden mejorar el resultado final. Esto reduce exponencialmente el número de nodos visitados y permite explorar mayor profundidad en el mismo tiempo de decisión, manteniendo la exactitud de MiniMax.  
+---
 
-## Iterative Deepening Search  
-**HexorcistaID** utiliza **Iterative Deepening Search (IDS)**, realizando búsquedas incrementales en profundidad hasta el límite de tiempo. IDS combina la ventaja de encontrar jugadas válidas rápidas con la posibilidad de refinar la decisión a medida que se profundiza. Esto garantiza que siempre se devuelva la mejor jugada encontrada hasta ese momento, incluso si el tiempo expira inesperadamente.  
+## 2. Poda Alpha-Beta  
+Para optimizar el cálculo, se aplica **Alpha-Beta Pruning**, reduciendo ramas que no pueden mejorar el resultado esperado.  
+Esto disminuye de forma significativa el número de nodos evaluados, permitiendo mayor profundidad de búsqueda en el mismo tiempo.  
 
-## Zobrist Hashing  
-Cada estado del tablero se representa mediante un **hash único** generado con **Zobrist Hashing**, permitiendo almacenar y reutilizar evaluaciones previas en una **tabla de transposición**. Esto evita re-calcular nodos idénticos en distintas ramas del árbol, acelerando la exploración y mejorando la eficiencia del algoritmo en tableros grandes.  
+Ejemplo simplificado en pseudocódigo:  
 
-## Heurística Dijkstra  
-La heurística principal combina **Dijkstra** para estimar la distancia mínima entre los bordes que el jugador debe conectar y el concepto de **“puentes”** estratégicos. Cada celda se pondera según su contribución al camino más corto hacia la victoria. La evaluación global del tablero refleja no sólo la proximidad a ganar, sino también la solidez de las conexiones intermedias.  
+```python
+def minimax(node, depth, alpha, beta, maximizing):
+    if depth == 0 or node.is_terminal():
+        return evaluate(node)
 
-## Decision Making  
-El jugador toma decisiones basadas en:  
-- **Priorizar** movimientos que reduzcan la distancia mínima hacia la victoria (Dijkstra).  
-- **Maximizar** la creación de puentes defensivos y ofensivos, que bloquean al oponente y refuerzan la conectividad propia.  
-- **Evaluar** las amenazas inmediatas del rival, asignando alta penalización a posiciones que puedan permitir una victoria rápida contraria.  
-- **Ajustar** profundidad y exploración según tiempo disponible, gracias a IDS y poda Alpha-Beta.  
+    if maximizing:
+        value = -float("inf")
+        for child in node.children():
+            value = max(value, minimax(child, depth-1, alpha, beta, False))
+            alpha = max(alpha, value)
+            if alpha >= beta:
+                break  # poda
+        return value
+    else:
+        value = float("inf")
+        for child in node.children():
+            value = min(value, minimax(child, depth-1, alpha, beta, True))
+            beta = min(beta, value)
+            if beta <= alpha:
+                break  # poda
+        return value
+```
 
-## Análisis de Comportamiento  
-- **Exploración eficiente**: poda Alpha-Beta combinada con IDS permite balancear profundidad y cobertura del árbol.  
-- **Robustez frente a oponentes fuertes**: la heurística basada en caminos mínimos y puentes prioriza jugadas estratégicamente seguras.  
-- **Capacidad de adaptación**: IDS asegura que siempre se devuelve la mejor jugada posible según el tiempo, evitando movimientos arbitrarios en estados complejos.  
-- **Complejidad**: O(b^d) sin poda, se reduce sustancialmente con Alpha-Beta, y la tabla de transposición evita evaluaciones repetidas, haciendo factible su uso incluso en tableros grandes.  
+---
+
+## 3. Búsqueda con Profundización Iterativa (IDS)  
+El motor emplea **Iterative Deepening Search (IDS)**: explora primero profundidades pequeñas y aumenta progresivamente hasta agotar el tiempo disponible.  
+Esto asegura:  
+
+- Una jugada válida rápida en situaciones críticas.  
+- Mayor precisión si el tiempo de cálculo lo permite.  
+
+---
+
+## 4. Tablas de Transposición con Zobrist Hashing  
+Para evitar recalcular posiciones repetidas, cada estado del tablero se representa con un **hash único** mediante **Zobrist Hashing**.  
+Esto permite almacenar evaluaciones intermedias en una **tabla de transposición**, reduciendo redundancia y acelerando la búsqueda en tableros grandes.  
+
+---
+
+## 5. Heurística: Dijkstra y Puentes Estratégicos  
+La evaluación del tablero combina dos ideas principales:  
+
+- **Dijkstra**: estima la distancia mínima entre los bordes que el jugador debe conectar.  
+- **Puentes**: refuerzan la conectividad propia y bloquean caminos del oponente.  
+
+Función heurística aproximada:  
+
+\[
+h(s) = d_{oponente}(s) - d_{jugador}(s)
+\]
+
+- Un valor **negativo** indica ventaja para el jugador.  
+- Un valor **positivo** indica ventaja rival.  
+
+---
+
+## 6. Estrategia de Decisión  
+El agente selecciona movimientos priorizando:  
+
+1. Reducir su propia distancia a la victoria.  
+2. Reforzar la conectividad mediante **puentes**.  
+3. Bloquear caminos críticos del rival.  
+4. Ajustar la profundidad de cálculo según el **tiempo disponible**.  
+
+---
+
+## 7. Complejidad y Eficiencia  
+- **MiniMax sin poda**:  
+
+\[
+O(b^d) \quad \text{con } b=\text{factor de ramificación}, \; d=\text{profundidad}
+\]
+
+- **Con Alpha-Beta**:  
+
+\[
+O(b^{d/2})
+\]
+
+- **Con tablas de transposición**: se reducen aún más los cálculos redundantes, mejorando la eficiencia global.  
+

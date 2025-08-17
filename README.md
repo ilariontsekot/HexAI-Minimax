@@ -35,7 +35,7 @@ def minimax(node, depth, alpha, beta, maximizing):
         return value
 ```
 
-<p align="center"> <img src="funcionamiento.png" alt="Funcionamiento del motor" width="500"/> </p>
+<p align="center"> <img src="funcionamiento.png" alt="Funcionamiento del motor" /> </p>
 ---
 
 ## 3. Búsqueda con Profundización Iterativa (IDS)  

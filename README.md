@@ -1,8 +1,7 @@
-# HexorcistaID: AI Player para Hex con Minimax y Poda Alpha-Beta  
+# HexorcistaID: AI Player para Hex con Minimax y Poda Alpha-Beta
 
-## 1. Fundamentos: MiniMax  
-El núcleo de **HexorcistaID** es el algoritmo **MiniMax**, que modela el juego como un árbol de decisiones adversarias.  
-Cada nodo representa un estado del tablero, y el agente selecciona el movimiento que maximiza su ventaja asumiendo que el rival juega de forma óptima.  
+**HexorcistaID** es un motor de inteligencia artificial para el juego de mesa **Hex**, desarrollado en Java y listo para compilar en NetBeans.  
+Implementa estrategias clásicas de IA como **MiniMax**, **Alpha-Beta Pruning**, **Iterative Deepening Search** y **Zobrist Hashing** para ofrecer un agente competitivo.  
 
 ---
 

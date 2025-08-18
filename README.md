@@ -34,7 +34,7 @@ break # pruning
 return value
 ```
 
-<p align="center"> <img src="operation.png" alt="Engine operation" /> </p>
+<p align="center"> <img src="funcionamiento.png" alt="Engine operation" /> </p>
 ---
 
 ## 3. Iterative Deepening Search (IDS)

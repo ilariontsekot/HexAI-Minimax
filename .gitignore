@@ -1,0 +1,21 @@
+# Archivos compilados
+*.class
+*.jar
+
+# Archivos de configuración y propiedades
+*.properties
+*.xml
+
+# Directorios de build
+/build/
+/dist/
+/nbproject/private/
+/lib/
+/out/
+/generated-sources/
+
+# Archivos temporales
+*.log
+*.tmp
+.DS_Store
+
